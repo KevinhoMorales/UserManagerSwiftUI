@@ -9,7 +9,10 @@ import Foundation
 
 // MARK: - UserRepository
 
-protocol UserRepository: Sendable {
+@MainActor
+protocol UserRepository: AnyObject {
 
     func fetchUsers() async throws -> [User]
+
+    func updateUser(_ user: User) async throws
 }

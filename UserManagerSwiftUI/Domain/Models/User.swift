@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - User
 
-struct User: Identifiable, Equatable, Sendable {
+struct User: Identifiable, Equatable, Hashable, Sendable {
 
     // MARK: Properties
 

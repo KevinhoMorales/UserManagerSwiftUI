@@ -39,8 +39,10 @@ final class UserListViewModel: ObservableObject {
         do {
             users = try await repository.fetchUsers()
         } catch {
-            users = []
             errorMessage = error.localizedDescription
+            if users.isEmpty {
+                users = []
+            }
         }
 
         isLoading = false

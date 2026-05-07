@@ -14,13 +14,28 @@ struct UserManagerSwiftUIApp: App {
 
     // MARK: Composition
 
-    private let usersRepository: UserRepository = UserRepositoryImpl(
-        networkService: AlamofireNetworkService()
-    )
+    @StateObject private var appCoordinator: AppCoordinator
+    @StateObject private var usersChangeNotifier: UsersChangeNotifier
+    private let usersRepository: UserRepository
 
-    // MARK: Properties
+    // MARK: Lifecycle
 
-    @StateObject private var appCoordinator = AppCoordinator()
+    init() {
+        let realmManager: RealmManager
+        do {
+            realmManager = try RealmManagerImpl()
+        } catch {
+            fatalError("Could not open the local store: \(error.localizedDescription)")
+        }
+
+        _appCoordinator = StateObject(wrappedValue: AppCoordinator())
+        _usersChangeNotifier = StateObject(wrappedValue: UsersChangeNotifier())
+
+        usersRepository = UserRepositoryImpl(
+            networkService: AlamofireNetworkService(),
+            realmManager: realmManager
+        )
+    }
 
     // MARK: Scene
 
@@ -30,6 +45,7 @@ struct UserManagerSwiftUIApp: App {
                 UserListView(repository: usersRepository)
             }
             .environmentObject(appCoordinator)
+            .environmentObject(usersChangeNotifier)
         }
     }
 }

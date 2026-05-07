@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2B0000032FAD400000AF0397 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2B0000022FAD400000AF0397 /* Alamofire */; };
+		2B0000042FAD400000AF0397 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2B0000062FAD400000AF0397 /* RealmSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +58,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B0000032FAD400000AF0397 /* Alamofire in Frameworks */,
+				2B0000042FAD400000AF0397 /* RealmSwift in Frameworks */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2AF251D72FAD366000AF0397 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,8 +120,8 @@
 			name = UserManagerSwiftUI;
 			packageProductDependencies = (
 				2B0000022FAD400000AF0397 /* Alamofire */,
+				2B0000062FAD400000AF0397 /* RealmSwift */,
 			);
-			productName = UserManagerSwiftUI;
 			productReference = 2AF251CD2FAD365E00AF0397 /* UserManagerSwiftUI.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -200,6 +205,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2B0000012FAD400000AF0397 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				2B0000052FAD400000AF0397 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2AF251CE2FAD365E00AF0397 /* Products */;
@@ -594,6 +600,14 @@
 				minimumVersion = 5.9.0;
 			};
 		};
+		2B0000052FAD400000AF0397 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.54.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -601,6 +615,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2B0000012FAD400000AF0397 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		2B0000062FAD400000AF0397 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B0000052FAD400000AF0397 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
