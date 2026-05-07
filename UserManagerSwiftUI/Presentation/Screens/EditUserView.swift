@@ -130,31 +130,26 @@ struct EditUserView: View {
 // MARK: - Previews
 
 #Preview {
-    struct PreviewWrap: View {
-        var body: some View {
-            NavigationStack {
-                EditUserView(
-                    user: User(
-                        id: 1,
-                        username: "jdoe",
-                        name: "Jane Doe",
-                        email: "jane@example.com",
-                        phone: "555",
-                        city: "Austin",
-                        latitude: 0,
-                        longitude: 0
-                    ),
-                    repository: UserRepositoryImpl(
-                        networkService: AlamofireNetworkService(),
-                        realmManager: try! RealmManagerImpl(
-                            configuration: RealmBootstrap.inMemoryConfiguration(identifier: "edit-preview")
-                        )
-                    ),
-                    onSaved: { _ in }
+    NavigationStack {
+        EditUserView(
+            user: User(
+                id: 1,
+                username: "jdoe",
+                name: "Jane Doe",
+                email: "jane@example.com",
+                phone: "555",
+                city: "Austin",
+                latitude: 0,
+                longitude: 0
+            ),
+            repository: UserRepositoryImpl(
+                networkService: AlamofireNetworkService(),
+                realmManager: try! RealmManagerImpl(
+                    configuration: RealmBootstrap.inMemoryConfiguration(identifier: "edit-preview")
                 )
-                .environmentObject(UsersChangeNotifier())
-            }
-        }
+            ),
+            onSaved: { _ in }
+        )
+        .environmentObject(UsersChangeNotifier())
     }
-    return PreviewWrap()
 }
