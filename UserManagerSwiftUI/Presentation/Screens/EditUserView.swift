@@ -98,6 +98,9 @@ struct EditUserView: View {
                 .disabled(viewModel.canSave == false || viewModel.isSaving)
             }
         }
+        .onAppear {
+            viewModel.validateFields()
+        }
         .overlay {
             if viewModel.isSaving {
                 Color.black.opacity(0.08)

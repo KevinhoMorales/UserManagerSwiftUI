@@ -16,6 +16,8 @@ struct UserListView: View {
     @StateObject private var viewModel: UserListViewModel
     @EnvironmentObject private var usersChangeNotifier: UsersChangeNotifier
 
+    @State private var userPendingDeletion: User?
+
     private let repository: UserRepository
 
     // MARK: Lifecycle
@@ -36,7 +38,7 @@ struct UserListView: View {
             } else if viewModel.users.isEmpty {
                 emptyStateView
             } else {
-                usersScrollContent
+                usersListContent
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -44,6 +46,28 @@ struct UserListView: View {
         .navigationBarTitleDisplayMode(.large)
         .navigationDestination(for: User.self) { user in
             UserDetailView(user: user, repository: repository)
+        }
+        .confirmationDialog(
+            "Remove this user?",
+            isPresented: Binding(
+                get: { userPendingDeletion != nil },
+                set: { if $0 == false { userPendingDeletion = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                if let user = userPendingDeletion {
+                    Task { await viewModel.deleteUser(id: user.id) }
+                }
+                userPendingDeletion = nil
+            }
+            Button("Cancel", role: .cancel) {
+                userPendingDeletion = nil
+            }
+        } message: {
+            if let user = userPendingDeletion {
+                Text("\(user.name) will be hidden on this device and will not return after you refresh or go offline.")
+            }
         }
         .onChange(of: usersChangeNotifier.revision) { _, _ in
             Task { await viewModel.loadUsers() }
@@ -114,20 +138,28 @@ struct UserListView: View {
     // MARK: Empty
 
     private var emptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "person.3.sequence")
+        VStack(spacing: 20) {
+            Image(systemName: "person.crop.circle.badge.minus")
                 .font(.system(size: 48, weight: .light))
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(.secondary)
 
-            Text("No users yet")
+            Text("No users to show")
                 .font(.title3.bold())
 
-            Text("Pull down to refresh, or check back after your team has been added.")
+            Text("Everyone may have been removed on this device, or nothing has loaded yet. Pull down to refresh, or reload from the server.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+                .padding(.horizontal, 28)
+
+            Button {
+                Task { await viewModel.loadUsers() }
+            } label: {
+                Label("Reload from server", systemImage: "arrow.clockwise.circle")
+                    .font(.headline)
+            }
+            .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(24)
@@ -138,23 +170,46 @@ struct UserListView: View {
 
     // MARK: List Content
 
-    private var usersScrollContent: some View {
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                if let message = viewModel.errorMessage {
+    private var usersListContent: some View {
+        List {
+            if let message = viewModel.errorMessage {
+                Section {
                     refreshFailureBanner(message: message)
                 }
+                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+            }
 
+            if let deleteMessage = viewModel.deleteError {
+                Section {
+                    deleteFailureBanner(message: deleteMessage)
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+            }
+
+            Section {
                 ForEach(viewModel.users) { user in
                     NavigationLink(value: user) {
                         UserCardView(user: user)
                     }
-                    .buttonStyle(.plain)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            userPendingDeletion = user
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 8, trailing: 20))
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
         .refreshable {
             await viewModel.loadUsers()
         }
@@ -194,6 +249,28 @@ struct UserListView: View {
                 .fill(.orange.opacity(0.12))
         }
         .accessibilityElement(children: .combine)
+    }
+
+    private func deleteFailureBanner(message: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "xmark.circle.fill")
+                .foregroundStyle(.red)
+                .font(.body)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Could not remove user")
+                    .font(.subheadline.weight(.semibold))
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(16)
+        .background {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(.red.opacity(0.1))
+        }
     }
 }
 

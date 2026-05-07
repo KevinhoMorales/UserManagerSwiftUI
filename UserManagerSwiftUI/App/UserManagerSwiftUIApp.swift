@@ -23,7 +23,7 @@ struct UserManagerSwiftUIApp: App {
     init() {
         let realmManager: RealmManager
         do {
-            realmManager = try RealmManagerImpl()
+            realmManager = try RealmManagerImpl(configuration: RealmBootstrap.persistedConfiguration())
         } catch {
             fatalError("Could not open the local store: \(error.localizedDescription)")
         }

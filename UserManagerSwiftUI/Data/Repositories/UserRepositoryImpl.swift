@@ -29,7 +29,7 @@ final class UserRepositoryImpl: UserRepository {
     func fetchUsers() async throws -> [User] {
         do {
             let usersDTO: [UserDTO] = try await networkService.request(.users, as: [UserDTO].self)
-            let users = usersDTO.map { $0.toDomain() }
+            let users = filterOutDeleted(usersDTO.map { $0.toDomain() })
             try realmManager.saveUsers(users)
             return users
         } catch {
@@ -37,11 +37,22 @@ final class UserRepositoryImpl: UserRepository {
             guard cached.isEmpty == false else {
                 throw error
             }
-            return cached
+            return filterOutDeleted(cached)
         }
     }
 
     func updateUser(_ user: User) async throws {
         try realmManager.updateUser(user)
+    }
+
+    func deleteUser(id: Int) async throws {
+        try realmManager.logicallyDeleteUser(id: id)
+    }
+
+    // MARK: Private
+
+    private func filterOutDeleted(_ users: [User]) -> [User] {
+        let tombstones = realmManager.fetchDeletedUserIds()
+        return users.filter { tombstones.contains($0.id) == false }
     }
 }

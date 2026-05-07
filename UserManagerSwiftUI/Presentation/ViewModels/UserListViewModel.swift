@@ -18,6 +18,7 @@ final class UserListViewModel: ObservableObject {
     @Published private(set) var users: [User] = []
     @Published private(set) var isLoading: Bool
     @Published private(set) var errorMessage: String?
+    @Published private(set) var deleteError: String?
 
     // MARK: Properties
 
@@ -35,6 +36,7 @@ final class UserListViewModel: ObservableObject {
     func loadUsers() async {
         isLoading = true
         errorMessage = nil
+        deleteError = nil
 
         do {
             users = try await repository.fetchUsers()
@@ -46,5 +48,15 @@ final class UserListViewModel: ObservableObject {
         }
 
         isLoading = false
+    }
+
+    func deleteUser(id: Int) async {
+        deleteError = nil
+        do {
+            try await repository.deleteUser(id: id)
+            users.removeAll { $0.id == id }
+        } catch {
+            deleteError = error.localizedDescription
+        }
     }
 }

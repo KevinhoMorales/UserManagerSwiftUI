@@ -20,7 +20,10 @@ protocol RealmManager: AnyObject {
 
     func updateUser(_ user: User) throws
 
-    func deleteUser(id: Int) throws
+    /// Records a logical delete (tombstone) and removes the cached `RealmUserObject` row when present.
+    func logicallyDeleteUser(id: Int) throws
 
-    func userExists(id: Int) throws -> Bool
+    func userExists(id: Int) -> Bool
+
+    func fetchDeletedUserIds() -> Set<Int>
 }
