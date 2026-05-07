@@ -12,6 +12,12 @@ import SwiftUI
 @main
 struct UserManagerSwiftUIApp: App {
 
+    // MARK: Composition
+
+    private let usersRepository: UserRepository = UserRepositoryImpl(
+        networkService: AlamofireNetworkService()
+    )
+
     // MARK: Properties
 
     @StateObject private var appCoordinator = AppCoordinator()
@@ -21,7 +27,7 @@ struct UserManagerSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $appCoordinator.navigationPath) {
-                UserListView()
+                UserListView(repository: usersRepository)
             }
             .environmentObject(appCoordinator)
         }

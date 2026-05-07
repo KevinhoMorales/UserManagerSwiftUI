@@ -6,45 +6,93 @@
 //
 
 import SwiftUI
-import UIKit
 
 // MARK: - UserListView
 
 struct UserListView: View {
 
-    // MARK: Constants
+    // MARK: Properties
 
-    private enum Layout {
-        static let horizontalInset: CGFloat = 24
-        static let titleSubtitleSpacing: CGFloat = 8
-        static let topPadding: CGFloat = 8
+    @StateObject private var viewModel: UserListViewModel
+
+    // MARK: Lifecycle
+
+    init(repository: UserRepository) {
+        _viewModel = StateObject(wrappedValue: UserListViewModel(repository: repository))
     }
 
     // MARK: Body
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Layout.titleSubtitleSpacing) {
-                Text("Users")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.primary)
+        Group {
+            if viewModel.isLoading && viewModel.users.isEmpty {
+                ProgressView("Loading users…")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let message = viewModel.errorMessage {
+                ContentUnavailableView(
+                    "Could not load users",
+                    systemImage: "wifi.exclamationmark",
+                    description: Text(message)
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                listContent
+            }
+        }
+        .navigationTitle("Users")
+        .navigationBarTitleDisplayMode(.large)
+        .task {
+            await viewModel.loadUsers()
+        }
+    }
 
-                Text("Browse and manage your team members. Content will appear here.")
+    // MARK: Subviews
+
+    private var listContent: some View {
+        List {
+            Section {
+                Text("Browse and manage your team members.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 8, trailing: 20))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, Layout.horizontalInset)
-            .padding(.top, Layout.topPadding)
+
+            Section {
+                ForEach(viewModel.users) { user in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(user.name)
+                            .font(.headline)
+                        Text("@\(user.username)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(user.email)
+                            .font(.subheadline)
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Color(uiColor: UIColor.systemGroupedBackground))
+        .listStyle(.insetGrouped)
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+                    .padding(12)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+            }
+        }
     }
 }
 
 // MARK: - Previews
 
 #Preview {
-    UserListView()
+    NavigationStack {
+        UserListView(
+            repository: UserRepositoryImpl(
+                networkService: AlamofireNetworkService()
+            )
+        )
+    }
 }
