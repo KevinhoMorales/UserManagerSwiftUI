@@ -1,0 +1,64 @@
+/* Common */
+"common.ok" = "Aceptar";
+"common.cancel" = "Cancelar";
+"common.delete" = "Eliminar";
+"common.retry" = "Reintentar";
+"common.save" = "Guardar";
+"common.edit" = "Editar";
+"common.try_again" = "Volver a intentar";
+
+/* User list */
+"user_list.title" = "Usuarios";
+"user_list.create_user" = "Crear usuario";
+"user_list.create_user.a11y" = "Crear un usuario nuevo";
+"user_list.loading" = "Cargando usuarios…";
+"user_list.error.title" = "Algo salió mal";
+"user_list.empty.title" = "Aún no hay usuarios";
+"user_list.empty.message" = "Puede que todos se hayan eliminado en este dispositivo o que aún no haya datos. Desliza hacia abajo para actualizar o vuelve a cargar desde el servidor.";
+"user_list.reload" = "Recargar desde el servidor";
+"user_list.delete.title" = "¿Eliminar este usuario?";
+"user_list.delete.message_format" = "%@ se ocultará en este dispositivo y no volverá a aparecer tras actualizar o usar la app sin conexión.";
+"user_list.refresh_failed" = "No se pudo actualizar";
+"user_list.delete_failed" = "No se pudo eliminar el usuario";
+
+/* Create user */
+"create_user.title" = "Crear usuario";
+"create_user.intro" = "Añade un miembro al equipo. La ubicación puede ayudar a rellenar coordenadas al crear el perfil.";
+"create_user.get_location" = "Obtener ubicación actual";
+"create_user.location_footer" = "Usa tu ubicación una sola vez para leer latitud y longitud. Puedes denegar el acceso en cualquier momento en Ajustes.";
+"create_user.loading" = "Obteniendo ubicación…";
+"create_user.alert.coordinates" = "Coordenadas actuales";
+"create_user.alert.location" = "Ubicación";
+"create_user.coordinates_format" = "Latitud: %1$.6f\nLongitud: %2$.6f";
+
+/* User detail */
+"user_detail.field.username" = "Nombre de usuario";
+"user_detail.field.email" = "Correo electrónico";
+"user_detail.field.phone" = "Teléfono";
+"user_detail.field.city" = "Ciudad";
+"user_detail.field.coordinates" = "Coordenadas";
+"user_detail.coordinates_format" = "%1$.5f°, %2$.5f°";
+
+/* Edit user */
+"edit_user.title" = "Editar usuario";
+"edit_user.section.name" = "Nombre";
+"edit_user.section.email" = "Correo electrónico";
+"edit_user.placeholder.name" = "Nombre";
+"edit_user.placeholder.email" = "Correo electrónico";
+"edit_user.saving" = "Guardando…";
+
+/* Validation */
+"validation.name.empty" = "El nombre no puede estar vacío.";
+"validation.email.empty" = "El correo no puede estar vacío.";
+"validation.email.invalid" = "Introduce un correo electrónico válido.";
+
+/* API errors */
+"error.api.invalid_url" = "La URL de la solicitud no es válida.";
+"error.api.invalid_status" = "El servidor devolvió una respuesta inesperada (HTTP %d).";
+"error.api.decoding_failed" = "No se pudo interpretar la respuesta.";
+
+/* Location */
+"location.denied" = "El acceso a la ubicación está desactivado. Puedes activarlo en Ajustes → Privacidad y seguridad → Localización para esta app.";
+"location.unsupported" = "La ubicación no está disponible para esta app en su configuración actual.";
+"location.no_sample" = "No se recibió ninguna lectura de ubicación.";
+"location.transient" = "No se pudo determinar tu posición. Inténtalo de nuevo en unos segundos.";

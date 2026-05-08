@@ -30,11 +30,11 @@ extension APIError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "The request URL is invalid."
+            return String(localized: "error.api.invalid_url")
         case .invalidStatusCode(let code):
-            return "The server returned an unexpected response (HTTP \(code))."
+            return String(format: String(localized: "error.api.invalid_status"), code)
         case .decodingFailed:
-            return "The response could not be decoded."
+            return String(localized: "error.api.decoding_failed")
         case .transport(let message):
             return message
         }

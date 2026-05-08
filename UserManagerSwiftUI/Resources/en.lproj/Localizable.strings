@@ -1,0 +1,64 @@
+/* Common */
+"common.ok" = "OK";
+"common.cancel" = "Cancel";
+"common.delete" = "Delete";
+"common.retry" = "Retry";
+"common.save" = "Save";
+"common.edit" = "Edit";
+"common.try_again" = "Try Again";
+
+/* User list */
+"user_list.title" = "Users";
+"user_list.create_user" = "Create User";
+"user_list.create_user.a11y" = "Create a new user";
+"user_list.loading" = "Loading users…";
+"user_list.error.title" = "Something Went Wrong";
+"user_list.empty.title" = "No Users Yet";
+"user_list.empty.message" = "Everyone may have been removed on this device, or nothing has loaded yet. Pull down to refresh, or reload from the server.";
+"user_list.reload" = "Reload from Server";
+"user_list.delete.title" = "Remove This User?";
+"user_list.delete.message_format" = "%@ will be hidden on this device and will not return after you refresh or go offline.";
+"user_list.refresh_failed" = "Could Not Refresh";
+"user_list.delete_failed" = "Could Not Remove User";
+
+/* Create user */
+"create_user.title" = "Create User";
+"create_user.intro" = "Add a new team member. Location helps pre-fill coordinates when you create a profile.";
+"create_user.get_location" = "Get Current Location";
+"create_user.location_footer" = "Uses your location once to read latitude and longitude. You can deny access at any time in Settings.";
+"create_user.loading" = "Getting location…";
+"create_user.alert.coordinates" = "Current Coordinates";
+"create_user.alert.location" = "Location";
+"create_user.coordinates_format" = "Latitude: %1$.6f\nLongitude: %2$.6f";
+
+/* User detail */
+"user_detail.field.username" = "Username";
+"user_detail.field.email" = "Email";
+"user_detail.field.phone" = "Phone";
+"user_detail.field.city" = "City";
+"user_detail.field.coordinates" = "Coordinates";
+"user_detail.coordinates_format" = "%1$.5f°, %2$.5f°";
+
+/* Edit user */
+"edit_user.title" = "Edit User";
+"edit_user.section.name" = "Name";
+"edit_user.section.email" = "Email";
+"edit_user.placeholder.name" = "Name";
+"edit_user.placeholder.email" = "Email";
+"edit_user.saving" = "Saving…";
+
+/* Validation */
+"validation.name.empty" = "Name cannot be empty.";
+"validation.email.empty" = "Email cannot be empty.";
+"validation.email.invalid" = "Enter a valid email address.";
+
+/* API errors */
+"error.api.invalid_url" = "The request URL is invalid.";
+"error.api.invalid_status" = "The server returned an unexpected response (HTTP %d).";
+"error.api.decoding_failed" = "The response could not be decoded.";
+
+/* Location */
+"location.denied" = "Location access is turned off. You can enable it in Settings → Privacy & Security → Location Services for this app.";
+"location.unsupported" = "Location is not available for this app in its current configuration.";
+"location.no_sample" = "No location sample was returned.";
+"location.transient" = "Could not determine your position yet. Try again in a few seconds.";

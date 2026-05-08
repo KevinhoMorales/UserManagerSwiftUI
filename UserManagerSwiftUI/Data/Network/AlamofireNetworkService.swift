@@ -27,7 +27,7 @@ final class AlamofireNetworkService: NetworkService, @unchecked Sendable {
 
     // MARK: NetworkService
 
-    func request<T: Decodable>(
+    nonisolated func request<T: Decodable>(
         _ endpoint: APIEndpoint,
         as type: T.Type
     ) async throws -> T {
@@ -47,7 +47,7 @@ final class AlamofireNetworkService: NetworkService, @unchecked Sendable {
 
     // MARK: - Private Helpers
 
-    private static func mapAFError(_ error: AFError) -> APIError {
+    private nonisolated static func mapAFError(_ error: AFError) -> APIError {
         if case let .responseValidationFailed(reason) = error,
            case let .unacceptableStatusCode(code) = reason {
             return .invalidStatusCode(code)

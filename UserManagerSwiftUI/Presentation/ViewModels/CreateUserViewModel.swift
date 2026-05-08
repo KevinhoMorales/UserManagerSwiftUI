@@ -9,7 +9,6 @@ import Foundation
 
 // MARK: - CreateUserViewModel
 
-/// Presentation helpers and location actions for create-user flow (keeps `CreateUserView` thin).
 struct CreateUserViewModel {
 
     // MARK: Actions
@@ -21,10 +20,6 @@ struct CreateUserViewModel {
     // MARK: Formatting
 
     func coordinatesAlertBody(latitude: Double, longitude: Double) -> String {
-        String(
-            format: "Latitude: %.6f\nLongitude: %.6f",
-            latitude,
-            longitude
-        )
+        L10n.CreateUser.coordinatesBody(latitude: latitude, longitude: longitude)
     }
 }

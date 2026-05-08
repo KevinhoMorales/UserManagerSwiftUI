@@ -9,13 +9,11 @@ import CoreLocation
 import Foundation
 import Observation
 
-// MARK: - Location User Messages
+// MARK: - Localization Helpers
 
-private let locationDeniedUserMessage =
-    "Location access is turned off. You can enable it in Settings → Privacy & Security → Location Services for this app."
-private let locationUnsupportedUserMessage = "Location is not available for this app in its current configuration."
-private let locationNoSampleUserMessage = "No location sample was returned."
-private let locationTransientFailureUserMessage = "Could not determine your position yet. Try again in a few seconds."
+private nonisolated func localizedLocationString(_ key: String) -> String {
+    Bundle.main.localizedString(forKey: key, value: nil, table: nil)
+}
 
 // MARK: - CoreLocationManager
 
@@ -67,9 +65,9 @@ final class CoreLocationManager: NSObject, LocationManager {
         case .authorizedAlways, .authorizedWhenInUse:
             beginLocationRequestIfPossible()
         case .denied, .restricted:
-            errorMessage = locationDeniedUserMessage
+            errorMessage = localizedLocationString("location.denied")
         @unknown default:
-            errorMessage = locationUnsupportedUserMessage
+            errorMessage = localizedLocationString("location.unsupported")
         }
     }
 
@@ -100,9 +98,9 @@ private nonisolated func userFacingErrorMessage(from error: Error) -> String {
     }
     switch error.code {
     case .denied, .promptDeclined:
-        return locationDeniedUserMessage
+        return localizedLocationString("location.denied")
     case .locationUnknown, .network:
-        return locationTransientFailureUserMessage
+        return localizedLocationString("location.transient")
     default:
         return error.localizedDescription
     }
@@ -122,7 +120,7 @@ extension CoreLocationManager: CLLocationManagerDelegate {
             } else if shouldFetchAfterAuthorization,
                       status == .denied || status == .restricted {
                 shouldFetchAfterAuthorization = false
-                errorMessage = locationDeniedUserMessage
+                errorMessage = localizedLocationString("location.denied")
             }
         }
     }
@@ -130,7 +128,7 @@ extension CoreLocationManager: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             Task { @MainActor in
-                errorMessage = locationNoSampleUserMessage
+                errorMessage = localizedLocationString("location.no_sample")
                 finishRequest()
             }
             return

@@ -18,7 +18,7 @@ struct UserCardView: View {
     // MARK: Layout
 
     private enum Layout {
-        static let cornerRadius: CGFloat = 16
+        static let cornerRadius: CGFloat = AppMetrics.cardCornerRadius
         static let avatarSize: CGFloat = 56
         static let contentSpacing: CGFloat = 6
         static let horizontalSpacing: CGFloat = 16
@@ -61,6 +61,9 @@ struct UserCardView: View {
                     y: Layout.shadowYOffset
                 )
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(accessibilitySummary)
+        .contentTransition(.interpolate)
     }
 
     // MARK: Subviews
@@ -71,10 +74,11 @@ struct UserCardView: View {
                 .fill(.quaternary)
 
             Image(systemName: "person.fill")
-                .font(.system(size: 24, weight: .medium))
+                .font(.title3)
                 .foregroundStyle(.tertiary)
         }
         .frame(width: Layout.avatarSize, height: Layout.avatarSize)
+        .accessibilityHidden(true)
     }
 
     @ViewBuilder
@@ -84,12 +88,19 @@ struct UserCardView: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.tertiary)
                 .frame(width: 16, alignment: .center)
+                .accessibilityHidden(true)
 
             Text(text)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
         }
+    }
+
+    // MARK: Private
+
+    private var accessibilitySummary: String {
+        "\(user.name), \(user.email), \(user.city)"
     }
 }
 

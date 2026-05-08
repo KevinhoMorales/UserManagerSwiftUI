@@ -12,7 +12,7 @@ import Foundation
 protocol NetworkService: Sendable {
 
     /// Performs a validated HTTP request and decodes the **successful** response body.
-    func request<T: Decodable>(
+    nonisolated func request<T: Decodable>(
         _ endpoint: APIEndpoint,
         as type: T.Type
     ) async throws -> T

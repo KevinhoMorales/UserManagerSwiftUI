@@ -13,16 +13,13 @@ enum APIEndpoint: Sendable {
 
     case users
 
-    // MARK: Properties
-
-    private static let baseURLString = "https://jsonplaceholder.typicode.com"
-
     // MARK: URL Resolution
 
-    func makeURL() throws -> URL {
+    nonisolated func makeURL() throws -> URL {
+        let baseURLString = "https://jsonplaceholder.typicode.com"
         switch self {
         case .users:
-            guard let url = URL(string: "\(Self.baseURLString)/users") else {
+            guard let url = URL(string: "\(baseURLString)/users") else {
                 throw APIError.invalidURL
             }
             return url

@@ -13,25 +13,23 @@ enum UserFormValidation: Sendable {
 
     // MARK: Name
 
-    /// Returns a user-visible validation message, or `nil` when the value is valid.
     static func validateName(_ raw: String) -> String? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty {
-            return "Name cannot be empty."
+            return String(localized: "validation.name.empty")
         }
         return nil
     }
 
     // MARK: Email
 
-    /// Returns a user-visible validation message, or `nil` when the value is valid.
     static func validateEmail(_ raw: String) -> String? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty {
-            return "Email cannot be empty."
+            return String(localized: "validation.email.empty")
         }
         guard isValidEmailFormat(trimmed) else {
-            return "Enter a valid email address."
+            return String(localized: "validation.email.invalid")
         }
         return nil
     }

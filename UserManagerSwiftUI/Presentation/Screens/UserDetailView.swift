@@ -39,21 +39,21 @@ struct UserDetailView: View {
             VStack(spacing: Layout.sectionSpacing) {
                 heroHeader
 
-                VStack(alignment: .leading, spacing: 16) {
-                    DetailRow(icon: "at", title: "Username", value: displayedUser.username)
-                    DetailRow(icon: "envelope", title: "Email", value: displayedUser.email)
-                    DetailRow(icon: "phone", title: "Phone", value: displayedUser.phone)
-                    DetailRow(icon: "building.2", title: "City", value: displayedUser.city)
+                VStack(alignment: .leading, spacing: AppMetrics.stackSpacing) {
+                    DetailRow(icon: "at", title: L10n.UserDetail.username, value: displayedUser.username)
+                    DetailRow(icon: "envelope", title: L10n.UserDetail.email, value: displayedUser.email)
+                    DetailRow(icon: "phone", title: L10n.UserDetail.phone, value: displayedUser.phone)
+                    DetailRow(icon: "building.2", title: L10n.UserDetail.city, value: displayedUser.city)
                     DetailRow(
                         icon: "location",
-                        title: "Coordinates",
+                        title: L10n.UserDetail.coordinates,
                         value: coordinateString
                     )
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, Layout.horizontalPadding)
             }
-            .padding(.vertical, 24)
+            .padding(.vertical, AppMetrics.screenEdgePadding)
         }
         .background(.regularMaterial)
         .navigationTitle(displayedUser.name)
@@ -65,9 +65,10 @@ struct UserDetailView: View {
                         displayedUser = updated
                     }
                 } label: {
-                    Text("Edit")
+                    Text(L10n.Common.edit)
                         .fontWeight(.semibold)
                 }
+                .accessibilityHint(L10n.EditUser.title)
             }
         }
     }
@@ -95,9 +96,11 @@ struct UserDetailView: View {
                     .frame(width: Layout.avatarSize, height: Layout.avatarSize)
 
                 Image(systemName: "person.fill")
-                    .font(.system(size: 40, weight: .regular))
+                    .font(.largeTitle)
+                    .imageScale(.large)
                     .foregroundStyle(.secondary)
             }
+            .accessibilityHidden(true)
 
             Text(displayedUser.name)
                 .font(.title2.bold())
@@ -114,7 +117,7 @@ struct UserDetailView: View {
     // MARK: Private
 
     private var coordinateString: String {
-        String(format: "%.5f°, %.5f°", displayedUser.latitude, displayedUser.longitude)
+        L10n.UserDetail.coordinatesValue(latitude: displayedUser.latitude, longitude: displayedUser.longitude)
     }
 }
 
@@ -132,6 +135,7 @@ private struct DetailRow: View {
                 .font(.body.weight(.medium))
                 .foregroundStyle(Color.accentColor)
                 .frame(width: 28, alignment: .center)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
@@ -147,13 +151,14 @@ private struct DetailRow: View {
 
             Spacer(minLength: 0)
         }
-        .padding(16)
+        .padding(AppMetrics.stackSpacing)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: AppMetrics.bannerCornerRadius, style: .continuous)
                 .fill(.background)
                 .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 2)
         }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -179,6 +184,5 @@ private struct DetailRow: View {
                 )
             )
         )
-        .environmentObject(UsersChangeNotifier())
     }
 }

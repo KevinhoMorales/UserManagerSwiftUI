@@ -30,8 +30,8 @@ struct CreateUserView: View {
     var body: some View {
         Form {
             Section {
-                Text("Add a new team member. Location helps pre-fill coordinates when you create a profile.")
-                    .font(.subheadline)
+                Text(L10n.CreateUser.intro)
+                    .font(.body)
                     .foregroundStyle(.secondary)
                     .listRowBackground(Color.clear)
             }
@@ -40,26 +40,37 @@ struct CreateUserView: View {
                 Button {
                     viewModel.requestCurrentLocation(using: locationManager)
                 } label: {
-                    Label("Get Current Location", systemImage: "location.fill")
+                    Label(L10n.CreateUser.getLocation, systemImage: "location.fill")
                 }
                 .disabled(locationManager.isLoading)
+                .accessibilityHint(L10n.CreateUser.locationFooter)
             } footer: {
-                Text("Uses your location once to read latitude and longitude. You can deny access at any time in Settings.")
+                Text(L10n.CreateUser.locationFooter)
+                    .font(.footnote)
             }
         }
-        .navigationTitle("Create User")
+        .formStyle(.grouped)
+        .navigationTitle(L10n.CreateUser.title)
         .navigationBarTitleDisplayMode(.inline)
         .overlay {
             if locationManager.isLoading {
                 ZStack {
                     Color.black.opacity(0.08)
                         .ignoresSafeArea()
-                    ProgressView("Getting location…")
-                        .padding(20)
-                        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .controlSize(.large)
+                        Text(L10n.CreateUser.loading)
+                            .font(.callout)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(AppMetrics.loadingPanelPadding)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: AppMetrics.loadingPanelCornerRadius))
                 }
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: locationManager.isLoading)
         .onChange(of: locationManager.isLoading) { _, isLoading in
             guard isLoading == false else { return }
             if let lat = locationManager.latitude,
@@ -77,21 +88,21 @@ struct CreateUserView: View {
             }
             errorAlertText = message
         }
-        .alert("Current coordinates", isPresented: Binding(
+        .alert(L10n.CreateUser.alertCoordinates, isPresented: Binding(
             get: { coordinatesAlertText != nil },
             set: { if $0 == false { coordinatesAlertText = nil } }
         )) {
-            Button("OK", role: .cancel) {
+            Button(L10n.Common.ok, role: .cancel) {
                 coordinatesAlertText = nil
             }
         } message: {
             Text(coordinatesAlertText ?? "")
         }
-        .alert("Location", isPresented: Binding(
+        .alert(L10n.CreateUser.alertLocation, isPresented: Binding(
             get: { errorAlertText != nil },
             set: { if $0 == false { errorAlertText = nil } }
         )) {
-            Button("OK", role: .cancel) {
+            Button(L10n.Common.ok, role: .cancel) {
                 errorAlertText = nil
             }
         } message: {

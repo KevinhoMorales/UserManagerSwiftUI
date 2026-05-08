@@ -37,7 +37,7 @@ struct EditUserView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Name", text: $viewModel.name)
+                TextField(L10n.EditUser.namePlaceholder, text: $viewModel.name)
                     .textInputAutocapitalization(.words)
                     .disableAutocorrection(true)
                     .onChange(of: viewModel.name) { _, _ in
@@ -48,11 +48,11 @@ struct EditUserView: View {
                     validationHint(nameError)
                 }
             } header: {
-                Text("Name")
+                Text(L10n.EditUser.nameSection)
             }
 
             Section {
-                TextField("Email", text: $viewModel.email)
+                TextField(L10n.EditUser.emailPlaceholder, text: $viewModel.email)
                     .textContentType(.emailAddress)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
@@ -65,14 +65,15 @@ struct EditUserView: View {
                     validationHint(emailError)
                 }
             } header: {
-                Text("Email")
+                Text(L10n.EditUser.emailSection)
             }
 
             if let saveError = viewModel.saveError {
                 Section {
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .top, spacing: AppMetrics.tightSpacing) {
                         Image(systemName: "exclamationmark.circle.fill")
                             .foregroundStyle(.red)
+                            .accessibilityHidden(true)
                         Text(saveError)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -80,21 +81,23 @@ struct EditUserView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .disabled(viewModel.isSaving)
-        .navigationTitle("Edit User")
+        .navigationTitle(L10n.EditUser.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
+                Button(L10n.Common.cancel) {
                     dismiss()
                 }
                 .disabled(viewModel.isSaving)
             }
 
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button(L10n.Common.save) {
                     Task { await performSave() }
                 }
+                .fontWeight(.semibold)
                 .disabled(viewModel.canSave == false || viewModel.isSaving)
             }
         }
@@ -103,13 +106,23 @@ struct EditUserView: View {
         }
         .overlay {
             if viewModel.isSaving {
-                Color.black.opacity(0.08)
-                    .ignoresSafeArea()
-                ProgressView("Saving…")
-                    .padding(20)
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+                ZStack {
+                    Color.black.opacity(0.08)
+                        .ignoresSafeArea()
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .controlSize(.large)
+                        Text(L10n.EditUser.saving)
+                            .font(.callout)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(AppMetrics.loadingPanelPadding)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: AppMetrics.loadingPanelCornerRadius))
+                }
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: viewModel.isSaving)
     }
 
     // MARK: Private

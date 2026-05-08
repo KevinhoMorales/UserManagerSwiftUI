@@ -1,0 +1,2 @@
+/* Localized Info.plist strings (Spanish) */
+"NSLocationWhenInUseUsageDescription" = "Usamos tu ubicación para sugerir latitud y longitud al crear un usuario. Solo accedemos cuando pulsas Obtener ubicación actual.";
