@@ -19,11 +19,13 @@ struct UserListView: View {
     @State private var userPendingDeletion: User?
 
     private let repository: UserRepository
+    private let locationManager: CoreLocationManager
 
     // MARK: Lifecycle
 
-    init(repository: UserRepository) {
+    init(repository: UserRepository, locationManager: CoreLocationManager) {
         self.repository = repository
+        self.locationManager = locationManager
         _viewModel = StateObject(wrappedValue: UserListViewModel(repository: repository))
     }
 
@@ -44,6 +46,16 @@ struct UserListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationTitle("Users")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink {
+                    CreateUserView(locationManager: locationManager)
+                } label: {
+                    Label("Create user", systemImage: "plus.circle.fill")
+                }
+                .accessibilityLabel("Create user")
+            }
+        }
         .navigationDestination(for: User.self) { user in
             UserDetailView(user: user, repository: repository)
         }
@@ -284,7 +296,8 @@ struct UserListView: View {
                 realmManager: try! RealmManagerImpl(
                     configuration: RealmBootstrap.inMemoryConfiguration(identifier: "list-preview")
                 )
-            )
+            ),
+            locationManager: CoreLocationManager()
         )
         .environmentObject(UsersChangeNotifier())
     }

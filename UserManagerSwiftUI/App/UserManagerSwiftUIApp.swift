@@ -16,6 +16,7 @@ struct UserManagerSwiftUIApp: App {
 
     @StateObject private var appCoordinator: AppCoordinator
     @StateObject private var usersChangeNotifier: UsersChangeNotifier
+    @State private var locationManager: CoreLocationManager
     private let usersRepository: UserRepository
 
     // MARK: Lifecycle
@@ -30,6 +31,7 @@ struct UserManagerSwiftUIApp: App {
 
         _appCoordinator = StateObject(wrappedValue: AppCoordinator())
         _usersChangeNotifier = StateObject(wrappedValue: UsersChangeNotifier())
+        _locationManager = State(initialValue: CoreLocationManager())
 
         usersRepository = UserRepositoryImpl(
             networkService: AlamofireNetworkService(),
@@ -42,7 +44,7 @@ struct UserManagerSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $appCoordinator.navigationPath) {
-                UserListView(repository: usersRepository)
+                UserListView(repository: usersRepository, locationManager: locationManager)
             }
             .environmentObject(appCoordinator)
             .environmentObject(usersChangeNotifier)
